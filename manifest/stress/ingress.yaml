@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stress
+  namespace: skills
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: skills-alb-stress
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/security-groups: sg-0d67c1a07941b13d5
+    alb.ingress.kubernetes.io/actions.response-403: >
+      {"type":"fixed-response","fixedResponseConfig":{"contentType":"text/plain","statusCode":"403","messageBody":"403 Error"}}
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /v1
+            pathType: Prefix
+            backend:
+              service:
+                name: stress
+                port:
+                  number: 8080
+  defaultBackend:
+    service:
+      name: response-403
+      port:
+        name: use-annotation

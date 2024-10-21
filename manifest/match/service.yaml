@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: match
+  namespace: skills
+  labels:
+    app: match
+spec:
+  selector:
+    app: match
+  type: ClusterIP
+  ports:
+    - name: match
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

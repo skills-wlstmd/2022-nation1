@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-match-to-stress
+  namespace: skills
+spec:
+  podSelector:
+    matchLabels:
+      app: stress
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: stress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: stress
+    - to:
+        - namespaceSelector: {}
+          podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
